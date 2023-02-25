@@ -47,4 +47,19 @@ app.MapGet("/stringmath", () =>
     return count;
 });
 
+//4. Create function Fibonacci that returns N'th element of Fibonacci sequence
+//int n = 6 => Nth fibonacci number is 8
+app.MapGet("/fib", () =>
+{
+    int n = 6;
+    var fibList = new List<int>() { 1, 1 };
+
+    for (var i = 2; i < n; i++)
+    {
+        fibList.Add(fibList[fibList.Count - 1] + fibList[fibList.Count - 2]);
+    }
+    return fibList[fibList.Count - 1];
+
+});
+
 app.Run();
