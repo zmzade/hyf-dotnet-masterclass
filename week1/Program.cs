@@ -16,6 +16,7 @@ app.MapGet("/", () =>
 });
 
 //2. Math Array
+//return an array with first element= sum of negatives and second= product of positives;
 app.MapGet("/math", () =>
 {
     int[] arr = new[] { 271, -3, 1, 14, -100, 13, 2, 1, -8, -59, -1852, 41, 5 };
@@ -32,6 +33,18 @@ app.MapGet("/math", () =>
     return mathArray;
 });
 
-
+//3. String/Math
+//Return the number (count) of vowels in the given string.
+app.MapGet("/stringmath", () =>
+{
+    string input = "Intellectualization";
+    var vowels = new char[5] { 'a', 'i', 'e', 'o', 'u' };
+    var count = 0;
+    foreach (var vowel in input.ToLower())
+    {
+        if (vowels.Contains(vowel)) count++;
+    }
+    return count;
+});
 
 app.Run();
