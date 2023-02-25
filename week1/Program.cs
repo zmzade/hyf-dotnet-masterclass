@@ -62,4 +62,30 @@ app.MapGet("/fib", () =>
 
 });
 
+// 5. Given an integer array as an input,
+// if the length of the array is not even write the warning message,
+// otherwise split the array in half and add both resulting arrays together 
+// and write the result.
+
+
+app.MapGet("/split", () =>
+{
+    int[] input = new[] { 10, 2, 5, 7, 2, 3, 5, 7 };
+    if (input.Length % 2 != 0) System.Console.WriteLine("the number of items should be even in array");
+
+    var mid = input.Length / 2;
+    var firstArr = input[..mid];
+    var secondArr = input[mid..];
+
+    var sumArr = new int[mid];
+
+    for (var i = 0; i < firstArr.Length; i++)
+    {
+        var sum = 0;
+        sum = firstArr[i] + secondArr[i];
+
+        sumArr[i] = sum;
+    }
+    return sumArr;
+});
 app.Run();
