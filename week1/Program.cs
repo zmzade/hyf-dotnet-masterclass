@@ -3,9 +3,9 @@ var app = builder.Build();
 
 //homework week #1
 //1. string manipulation:reverse
-app.MapGet("/", () =>
+app.MapGet("/", (string input) =>
 {
-    string input = "world";
+
     char[] chars = new char[input.Length];
     for (int i = 0; i < input.Length; i++)
     {
@@ -35,9 +35,8 @@ app.MapGet("/math", () =>
 
 //3. String/Math
 //Return the number (count) of vowels in the given string.
-app.MapGet("/stringmath", () =>
+app.MapGet("/stringmath", (string input) =>
 {
-    string input = "Intellectualization";
     var vowels = new char[5] { 'a', 'i', 'e', 'o', 'u' };
     var count = 0;
     foreach (var vowel in input.ToLower())
@@ -49,14 +48,18 @@ app.MapGet("/stringmath", () =>
 
 //4. Create function Fibonacci that returns N'th element of Fibonacci sequence
 //int n = 6 => Nth fibonacci number is 8
-app.MapGet("/fib", () =>
+app.MapGet("/fib", (string n) =>
 {
-    int n = 6;
+    bool isNumeric = int.TryParse(n, out int number);
     var fibList = new List<int>() { 1, 1 };
-
-    for (var i = 2; i < n; i++)
+    if (isNumeric)
     {
-        fibList.Add(fibList[fibList.Count - 1] + fibList[fibList.Count - 2]);
+        if (number <= 2) return 1;
+        for (var i = 2; i < number; i++)
+        {
+            fibList.Add(fibList[fibList.Count - 1] + fibList[fibList.Count - 2]);
+        }
+        System.Console.WriteLine($"unable to parse '{n}'!");
     }
     return fibList[fibList.Count - 1];
 
@@ -81,8 +84,7 @@ app.MapGet("/split", () =>
 
     for (var i = 0; i < firstArr.Length; i++)
     {
-        var sum = 0;
-        sum = firstArr[i] + secondArr[i];
+        var sum = firstArr[i] + secondArr[i];
 
         sumArr[i] = sum;
     }
