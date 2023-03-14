@@ -5,7 +5,6 @@ app.MapGet("/", (decimal input, decimal rate) =>
 {
     var exchangeRate = new ExchangeRate("DKK", "EUR");
     var amount = input;
-    if (rate <= 0) throw new Exception("Rate should be positive");
     exchangeRate.Rate = rate;
     exchangeRate.Calculate(input);
     return $"{amount} {exchangeRate.FromCurrency} is {exchangeRate.Calculate(amount)} {exchangeRate.ToCurrency}";
@@ -38,40 +37,47 @@ app.Run();
 
 class Account
 {
+    private int _balance;
     public int Balance
     {
+
         get
         {
-            int balance = 0;
-            foreach (var item in transactions)
-            {
-                balance += item.Amount;
-            }
-            return balance;
+
+            // int balance = 0;
+            // foreach (var item in transactions)
+            // {
+            //     balance += item.Amount;
+            // }
+            // return balance;
+            return _balance;
         }
     }
     public Account(int amount)
     {
-        Deposit(amount);
+        _balance = amount;
     }
 
     public List<Transaction> transactions = new List<Transaction>();
-    public void Withdraw(int amount)
+    public int Withdraw(int amount)
     {
         if (amount <= 0)
             throw new ArgumentOutOfRangeException(nameof(amount), "Withdraw should be positive");
         if (Balance - amount < 0)
             throw new InvalidOperationException("we should not be able to withdraw more than we have in the balance");
-        var transaction = new Transaction(-amount);
-        transactions.Add(transaction);
+        // var transaction = new Transaction(-amount);
+        // transactions.Add(transaction);
+        return _balance -= amount;
     }
 
-    public void Deposit(int amount)
+    public int Deposit(int amount)
     {
         if (amount <= 0)
             throw new ArgumentOutOfRangeException(nameof(amount), "Deposit should be positive");
-        var transaction = new Transaction(amount);
-        transactions.Add(transaction);
+        // var transaction = new Transaction(amount);
+        // transactions.Add(transaction);
+
+        return _balance += amount;
     }
 }
 
