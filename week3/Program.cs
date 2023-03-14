@@ -1,6 +1,16 @@
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
+app.MapGet("/", (decimal input, decimal rate) =>
+{
+    var exchangeRate = new ExchangeRate("DKK", "EUR");
+    var amount = input;
+    if (rate <= 0) throw new Exception("Rate should be positive");
+    exchangeRate.Rate = rate;
+    exchangeRate.Calculate(input);
+    return $"{amount} {exchangeRate.FromCurrency} is {exchangeRate.Calculate(amount)} {exchangeRate.ToCurrency}";
+});
+
 app.MapGet("/temperature", (decimal input) =>
 {
     var temperature = new Temperature(input);
