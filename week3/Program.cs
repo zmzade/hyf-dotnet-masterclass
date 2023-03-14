@@ -1,6 +1,12 @@
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
+app.MapGet("/temperature", (decimal input) =>
+{
+    var temperature = new Temperature(input);
+    return $"{temperature.Celsius} Celsius is {temperature.Fahrenheit} Fahrenheit and {temperature.Kelvin} Kelvin";
+});
+
 app.MapGet("/interface", () =>
 {
     var cat = new Cat();
@@ -94,6 +100,6 @@ class Animal
 {
     public string MakeSound(IAnimal animal)
     {
-        return $"{animal.Name} sags {animal.Sound}";
+        return $"{animal.Name} says {animal.Sound}";
     }
 }
