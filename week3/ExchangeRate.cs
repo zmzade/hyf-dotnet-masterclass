@@ -2,7 +2,16 @@ public class ExchangeRate
 {
     public string FromCurrency { get; set; }
     public string ToCurrency { get; set; }
-    public decimal Rate { get; set; }
+    private decimal _rate;
+    public decimal Rate
+    {
+        get { return _rate; }
+        set
+        {
+            if (value <= 0) throw new Exception("Rate should be positive");
+            _rate = value;
+        }
+    }
     public ExchangeRate(string fromCurrency, string toCurrency)
     {
         FromCurrency = fromCurrency;
