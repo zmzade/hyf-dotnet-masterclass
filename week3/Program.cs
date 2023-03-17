@@ -21,8 +21,13 @@ app.MapGet("/interface", () =>
     var cat = new Cat();
     var dog = new Dog();
     var cow = new Cow();
-    var animal = new Animal();
-    return animal.MakeSound(cat);
+
+    return MakeSound(cat);
+
+    string MakeSound(IAnimal animal)
+    {
+        return $"{animal.Name} says {animal.Sound}";
+    }
 });
 
 app.MapGet("/account", () =>
@@ -40,16 +45,8 @@ class Account
     private int _balance;
     public int Balance
     {
-
         get
         {
-
-            // int balance = 0;
-            // foreach (var item in transactions)
-            // {
-            //     balance += item.Amount;
-            // }
-            // return balance;
             return _balance;
         }
     }
@@ -58,15 +55,14 @@ class Account
         _balance = amount;
     }
 
-    public List<Transaction> transactions = new List<Transaction>();
+
     public int Withdraw(int amount)
     {
         if (amount <= 0)
             throw new ArgumentOutOfRangeException(nameof(amount), "Withdraw should be positive");
         if (Balance - amount < 0)
             throw new InvalidOperationException("we should not be able to withdraw more than we have in the balance");
-        // var transaction = new Transaction(-amount);
-        // transactions.Add(transaction);
+
         return _balance -= amount;
     }
 
@@ -74,19 +70,7 @@ class Account
     {
         if (amount <= 0)
             throw new ArgumentOutOfRangeException(nameof(amount), "Deposit should be positive");
-        // var transaction = new Transaction(amount);
-        // transactions.Add(transaction);
-
         return _balance += amount;
-    }
-}
-
-class Transaction
-{
-    public int Amount { get; }
-    public Transaction(int amount)
-    {
-        Amount = amount;
     }
 }
 
@@ -110,12 +94,4 @@ class Cow : IAnimal
 {
     public string Name { get; set; } = "cow";
     public string Sound { get; set; } = "maa maa";
-}
-
-class Animal
-{
-    public string MakeSound(IAnimal animal)
-    {
-        return $"{animal.Name} says {animal.Sound}";
-    }
 }
