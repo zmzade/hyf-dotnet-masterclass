@@ -3,10 +3,16 @@ using HackYourFuture.Week6;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IRepository<User>, Repository<User>>();
 var app = builder.Build();
 
 
 app.MapGet("/", () => "Hello World!");
+app.MapGet("/get", async (IRepository<User> repository) =>
+{
+    var table = "users";
+    return await repository.Get(table);
+});
 
 app.MapGet("/users", async (IUserRepository userRepository) =>
 {
