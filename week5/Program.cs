@@ -6,10 +6,10 @@ app.MapGet("/meals", (IMealService mealService) =>
 {
     return mealService.ListMeals();
 });
+
 app.MapPost("/meal", (IMealService mealService, Meal meal) =>
 {
     mealService.AddMeal(meal);
-    
 });
 
 app.Run();
@@ -18,17 +18,6 @@ public interface IMealService
 {
     List<Meal> ListMeals();
     void AddMeal(Meal meal);
-}
-
-public class Meal
-{
-    public string Headline { get; set; }
-    public string ImageUrl { get; set; }
-    public string Body { get; set; }
-    public string Location { get; set; }
-    public int Price { get; set; }
-
-
 }
 
 public class FileMealService : IMealService
@@ -48,6 +37,14 @@ public class FileMealService : IMealService
         meals.Add(meal);
         var mealJson = System.Text.Json.JsonSerializer.Serialize(meals);
         File.WriteAllText("Meals.json", mealJson);
-
     }
+}
+
+public class Meal
+{
+    public string Headline { get; set; }
+    public string ImageUrl { get; set; }
+    public string Body { get; set; }
+    public string Location { get; set; }
+    public int Price { get; set; }
 }
