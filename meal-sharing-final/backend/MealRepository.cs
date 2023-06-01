@@ -5,11 +5,11 @@ using MySql.Data.MySqlClient;
 
 public class MealRepository : IMealRepository
 {
-    private string connectionString;
+    private string _connectionString;
 
     public MealRepository(IConfiguration configuration)
     {
-        this.connectionString = configuration.GetConnectionString("Default");
+        this._connectionString = configuration.GetConnectionString("Default");
     }
 
     public async Task<Meal[]> Search(string? title)
@@ -21,7 +21,7 @@ public class MealRepository : IMealRepository
             sql += " WHERE title like @title";
         }
 
-        using var connection = new MySqlConnection(connectionString);
+        using var connection = new MySqlConnection(_connectionString);
         var meals = await connection.QueryAsync<Meal>(sql, new { title = "%" + title + "%" });
         if (meals.ToArray().Length == 0)
         {
@@ -32,40 +32,32 @@ public class MealRepository : IMealRepository
 
     public async Task<Meal> PostMeal(Meal meal)
     {
-        try
-        {
-            var sql = @"INSERT INTO Meal (title, description, location,`when`, max_reservations, price, `created_date`) 
+        var sql = @"INSERT INTO Meal (title, description, location,`when`, max_reservations, price, `created_date`) 
         VALUES (@title, @description, @location, @when, @maxReservations, @price, @createdDate)";
-            using var connection = new MySqlConnection(connectionString);
-            var affectedRow = await connection.ExecuteAsync(sql, meal);
-            return meal;
-        }
-        catch (System.Exception)
-        {
-            throw new Exception("Something went wrong");
-        }
+        using var connection = new MySqlConnection(_connectionString);
+        var affectedRow = await connection.ExecuteAsync(sql, meal);
+        return meal;
     }
 
-    public async Task<string> PatchMeal(int id, Meal meal)
+    public async Task<int> UpdatedMealById(Meal meal, int id)
     {
-        if (id < 0)
-        {
-            return ("Id can not be negative!");
-        }
-        var sql = @$"UPDATE meal SET title=@title WHERE id ={id}";
-        using var connection = new MySqlConnection(connectionString);
-        var updatedRow = await connection.ExecuteAsync(sql, meal);
-        if (updatedRow == 0)
-        {
-            return ("Id not found!");
-        }
+        var sql = @$"UPDATE meal SET title=@title, description=@description, location=@location, 
+        when=@when, max_reservations=@MmaxReservations, price=@price, 
+        created_date@createdDate WHERE id= {id}";
+        using var connection = new MySqlConnection(_connectionString);
+        var row = await connection.ExecuteAsync(sql, meal);
+        return row;
+    }
 
-        return $"meal's title changed to {meal.Title} at this Id:{meal.Id}";
+    public async Task<bool> PatchMeal(int id, Meal meal)
+    {
+        var sql = @$"UPDATE meal SET title=@title WHERE id ={id}";
+        using var connection = new MySqlConnection(_connectionString);
+        var updatedRow = await connection.ExecuteAsync(sql, meal);
+        return updatedRow != 0;
     }
 
 }
-
-
 
 public class Meal
 {
@@ -80,4 +72,6 @@ public class Meal
     [JsonPropertyName("created_date")]
     public DateTime CreatedDate { get; set; }
 }
+
+
 
