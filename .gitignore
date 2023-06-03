@@ -282,3 +282,4 @@ MigrationBackup/
 .ionide/
 
 .DS_Store
+appsettings.*.json
